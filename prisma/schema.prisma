@@ -22,27 +22,14 @@ model User {
   needPasswordChange Boolean @default(true)
   status UserStatus @default(ACTIVE)
   isDonor Boolean @default(false)
-  bloodType BloodType
-  location  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   donor Donor?
   admin Admin?
-
 }
 
-enum UserRole {
-    DONOR
-    ADMIN
-    
-}
 
-enum UserStatus {
-    ACTIVE
-    BLOCKED
-    DELETED
-}
 
 
 model Donor {
@@ -50,12 +37,21 @@ model Donor {
   email String @unique
   user User @relation(fields: [email], references: [email])
   name String
+  gender Gender
   contactNumber String?
   photo     String?  
   availability Boolean @default(true)
+  bloodType BloodType
+  location  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
 
 model Admin {
   id        String      @id @default(uuid())
@@ -82,5 +78,15 @@ enum BloodType {
   O_NEGATIVE  
 }
 
+enum UserRole {
+    DONOR
+    ADMIN
+}
+
+enum UserStatus {
+    ACTIVE
+    BLOCKED
+    DELETED
+}
 
  

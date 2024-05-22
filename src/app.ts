@@ -1,12 +1,13 @@
 import express, { Application } from "express";
 import cors from "cors";
 import router from "./app/router";
-
 import { globalErrorHandler } from "./app/middleware/globalErrorHandler";
-import { apiNotFoundHandler } from "./app/middleware/apiNotFoundhandler";
+import { apiNotFoundHandler } from "./app/middleware/apiNotFoundHandler";
 const app: Application = express();
 
+//parser
 app.use(cors());
+app.use(express.json());
 
 //application route
 app.use("/api/v1", router);
