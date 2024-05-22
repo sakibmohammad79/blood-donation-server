@@ -5,8 +5,6 @@ import { UserRole } from "@prisma/client";
 
 const router = Router();
 
-router.post("/", Guard(UserRole.DONOR), RequestControoler.bloodRequest);
-
 router.get("/my", Guard(UserRole.DONOR), RequestControoler.myBloodRequest);
 
 router.get(
@@ -14,5 +12,7 @@ router.get(
   Guard(UserRole.DONOR),
   RequestControoler.offeredMeBloodRequest
 );
+
+router.post("/", Guard(UserRole.DONOR), RequestControoler.bloodRequest);
 
 export const RequestRoutes = router;
