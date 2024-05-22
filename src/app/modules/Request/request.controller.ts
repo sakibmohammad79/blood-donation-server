@@ -2,6 +2,7 @@ import httpStatus from "http-status";
 import catchAsync from "../../../shared/catchAsync";
 import sendResponse from "../../../shared/sendResponse";
 import { RequestService } from "./request.service";
+import { User } from "@prisma/client";
 
 const bloodRequest = catchAsync(async (req, res, next) => {
   const result = await RequestService.bloodRequestIntoDB(req);
@@ -13,6 +14,27 @@ const bloodRequest = catchAsync(async (req, res, next) => {
   });
 });
 
+const myBloodRequest = catchAsync(async (req, res, next) => {
+  const result = await RequestService.getMyBloodRequestIntoDB(req);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "My Blood request data fetched successfully!",
+    data: result,
+  });
+});
+const offeredMeBloodRequest = catchAsync(async (req, res, next) => {
+  const result = await RequestService.getOfferedMeBloodRequest(req);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Offered me blood request data fetched successfully!",
+    data: result,
+  });
+});
+
 export const RequestControoler = {
   bloodRequest,
+  myBloodRequest,
+  offeredMeBloodRequest,
 };

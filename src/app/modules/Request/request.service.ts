@@ -1,4 +1,4 @@
-import { UserStatus } from "@prisma/client";
+import { User, UserStatus } from "@prisma/client";
 import prisma from "../../../shared/prisma";
 
 const bloodRequestIntoDB = async (req: any) => {
@@ -30,6 +30,39 @@ const bloodRequestIntoDB = async (req: any) => {
   return result;
 };
 
+const getMyBloodRequestIntoDB = async (req: any) => {
+  const user = req.user;
+  console.log({ user });
+  const result = await prisma.request.findMany({
+    where: {
+      requesterEmail: user.email,
+    },
+  });
+  return result;
+};
+
+const getOfferedMeBloodRequest = async (req: any) => {
+  const { user } = req;
+  const userData = await prisma.user.findFirstOrThrow({
+    where: {
+      id: user.userId,
+    },
+  });
+  const donorData = await prisma.donor.findFirstOrThrow({
+    where: {
+      email: userData.email,
+    },
+  });
+  const offeredMeRequestData = await prisma.request.findMany({
+    where: {
+      receiverId: donorData.id,
+    },
+  });
+  return offeredMeRequestData;
+};
+
 export const RequestService = {
   bloodRequestIntoDB,
+  getMyBloodRequestIntoDB,
+  getOfferedMeBloodRequest,
 };
