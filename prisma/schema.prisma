@@ -27,9 +27,9 @@ model User {
 
   donor Donor?
   admin Admin?
+  requests  Request[] @relation("Requester")
+  receivedRequests Request[] @relation("Receiver")
 }
-
-
 
 
 model Donor {
@@ -48,7 +48,6 @@ model Donor {
   updatedAt DateTime @updatedAt
 }
 
-
 model Admin {
   id        String      @id @default(uuid())
   email     String   @unique
@@ -60,6 +59,31 @@ model Admin {
   updatedAt DateTime @updatedAt
 
   user User @relation(fields: [email], references: [email])
+}
+
+
+model Request {
+  id          String      @id @default(uuid())
+  requesterId String
+  requester   User     @relation("Requester", fields: [requesterId], references: [id])
+  receiverId  String
+  receiver    User     @relation("Receiver", fields: [receiverId], references: [id])
+  bloodType   String
+  status      RequestStatus @default(PENDING)
+  hospitalName String
+  requestDate DateTime
+  contactNumber String
+  email String
+  location String
+  bloodNeedDetails String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum RequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 
