@@ -4,7 +4,7 @@ import sendResponse from "../../../shared/sendResponse";
 import { RequestService } from "./request.service";
 
 const bloodRequest = catchAsync(async (req, res, next) => {
-  const result = await RequestService.bloodRequestIntoDB();
+  const result = await RequestService.bloodRequestIntoDB(req);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,

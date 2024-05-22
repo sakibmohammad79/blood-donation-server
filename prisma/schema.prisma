@@ -27,8 +27,6 @@ model User {
 
   donor Donor?
   admin Admin?
-  requests  Request[] @relation("Requester")
-  receivedRequests Request[] @relation("Receiver")
 }
 
 
@@ -46,6 +44,9 @@ model Donor {
   isDeleted Boolean @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  requestsMade  Request[] @relation("Requester")
+  requestsReceived Request[] @relation("Receiver")
 }
 
 model Admin {
@@ -65,16 +66,16 @@ model Admin {
 model Request {
   id          String      @id @default(uuid())
   requesterId String
-  requester   User     @relation("Requester", fields: [requesterId], references: [id])
+  requester   Donor     @relation("Requester", fields: [requesterId], references: [id])
   receiverId  String
-  receiver    User     @relation("Receiver", fields: [receiverId], references: [id])
+  receiver    Donor     @relation("Receiver", fields: [receiverId], references: [id])
   bloodType   String
   status      RequestStatus @default(PENDING)
   hospitalName String
-  requestDate DateTime
-  contactNumber String
-  email String
+  requesterEmail String
   location String
+  contactNumber String
+  requestDate DateTime
   bloodNeedDetails String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

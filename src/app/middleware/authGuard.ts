@@ -15,6 +15,7 @@ const Guard = (...userRoles: string[]) => {
   ) => {
     try {
       const token = req.headers.authorization;
+
       if (!token) {
         throw new ApiError(httpStatus.UNAUTHORIZED, "You are not authorized!");
       }
@@ -23,16 +24,14 @@ const Guard = (...userRoles: string[]) => {
         config.jwt.access_token_secret as Secret
       );
 
-      if (verfiedUser) {
+      if (!verfiedUser) {
         throw new ApiError(httpStatus.UNAUTHORIZED, "You are not authorized!");
       }
-
-      console.log(verfiedUser);
 
       //set user in req
       req.user = verfiedUser;
 
-      if (userRoles.length && !userRoles.includes(verfiedUser.userRole)) {
+      if (userRoles.length && !userRoles.includes(verfiedUser.role)) {
         throw new ApiError(httpStatus.FORBIDDEN, "You are forbidden!");
       }
       next();
