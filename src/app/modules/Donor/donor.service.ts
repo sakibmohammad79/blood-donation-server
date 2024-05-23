@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Donor, Prisma, UserStatus } from "@prisma/client";
 import { IPaginationOptions } from "../../interfaces/paginateOptions";
 import { paginationHelper } from "../../../helper/paginationHelper";
 import { donorSearchableFields } from "./donor.constant";
@@ -65,6 +65,92 @@ const getAllDonorFromDB = async (
   };
 };
 
+const getSingleDonorFromDB = async (id: string) => {
+  const result = await prisma.donor.findFirstOrThrow({
+    where: {
+      id,
+      isDeleted: false,
+    },
+  });
+  return result;
+};
+
+const donorDeleteIntoDB = async (id: string) => {
+  await prisma.donor.findUniqueOrThrow({
+    where: {
+      id,
+    },
+  });
+  const result = await prisma.$transaction(async (transactionClient) => {
+    const donorDeleteData = await transactionClient.donor.delete({
+      where: {
+        id,
+      },
+    });
+    await transactionClient.user.delete({
+      where: {
+        email: donorDeleteData.email,
+      },
+    });
+    return donorDeleteData;
+  });
+  return result;
+};
+
+const donorSoftDeleteIntoDB = async (id: string) => {
+  await prisma.donor.findFirstOrThrow({
+    where: {
+      id,
+      isDeleted: false,
+    },
+  });
+
+  const result = await prisma.$transaction(async (transactionClient) => {
+    const donorDeleteData = await transactionClient.donor.update({
+      where: {
+        id,
+      },
+      data: {
+        isDeleted: true,
+      },
+    });
+
+    await transactionClient.user.update({
+      where: {
+        email: donorDeleteData.email,
+      },
+      data: {
+        status: UserStatus.DELETED,
+      },
+    });
+    return donorDeleteData;
+  });
+  return result;
+};
+
+const updateDonorIntoDB = async (
+  id: string,
+  data: Partial<Donor>
+): Promise<Donor> => {
+  await prisma.donor.findUniqueOrThrow({
+    where: {
+      id,
+      isDeleted: false,
+    },
+  });
+  const result = await prisma.donor.update({
+    where: {
+      id,
+    },
+    data,
+  });
+  return result;
+};
+
 export const DonorService = {
   getAllDonorFromDB,
+  getSingleDonorFromDB,
+  donorDeleteIntoDB,
+  donorSoftDeleteIntoDB,
+  updateDonorIntoDB,
 };

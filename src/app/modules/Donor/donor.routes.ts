@@ -10,5 +10,24 @@ router.get(
   Guard(UserRole.ADMIN, UserRole.DONOR),
   DonorController.getAllDonor
 );
+router.get(
+  "/:id",
+  Guard(UserRole.ADMIN, UserRole.DONOR),
+  DonorController.getSingleDonor
+);
+
+router.delete("/:id", Guard(UserRole.ADMIN), DonorController.donorDelete);
+
+router.patch(
+  "/soft-delete/:id",
+  Guard(UserRole.ADMIN),
+  DonorController.donorSoftDelete
+);
+
+router.patch(
+  "/:id",
+  Guard(UserRole.ADMIN, UserRole.DONOR),
+  DonorController.updateDonor
+);
 
 export const DonorRoutes = router;

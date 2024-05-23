@@ -19,6 +19,55 @@ const getAllAdmin = catchAsync(async (req, res, next) => {
   });
 });
 
+const getSingleAdmin = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const result = await AdminService.getSingleAdminFromDB(id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Admin data fetched by id!",
+    data: result,
+  });
+});
+
+const adminDelete = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+
+  const result = await AdminService.adminDeleteIntoDB(id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Admin deleted successfully!",
+    data: result,
+  });
+});
+
+const adminSoftDelete = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const result = await AdminService.adminSoftDeleteIntoDB(id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Admin soft delete by id!",
+    data: result,
+  });
+});
+
+const updateAdmin = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const result = await AdminService.updateAdminIntoDB(id, req.body);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Admin update successfully!",
+    data: result,
+  });
+});
+
 export const AdminController = {
   getAllAdmin,
+  getSingleAdmin,
+  adminDelete,
+  adminSoftDelete,
+  updateAdmin,
 };
