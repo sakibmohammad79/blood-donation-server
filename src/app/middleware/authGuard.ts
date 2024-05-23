@@ -6,6 +6,7 @@ import httpStatus from "http-status";
 import ApiError from "../error/ApiError";
 import { jwtHelpers } from "../../helper/jwtHelper";
 import config from "../../config";
+import { IAuthUser } from "../interfaces/common";
 
 const Guard = (...userRoles: string[]) => {
   return async (
@@ -19,7 +20,7 @@ const Guard = (...userRoles: string[]) => {
       if (!token) {
         throw new ApiError(httpStatus.UNAUTHORIZED, "You are not authorized!");
       }
-      const verfiedUser = jwtHelpers.verifyToken(
+      const verfiedUser: any = jwtHelpers.verifyToken(
         token,
         config.jwt.access_token_secret as Secret
       );

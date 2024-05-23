@@ -49,7 +49,7 @@ const createDonorIntoDB = async (payload: any) => {
 const createAdminIntoDB = async (payload: any) => {
   const userInfo = await prisma.user.findUnique({
     where: {
-      email: payload.donor.email,
+      email: payload.admin.email,
     },
   });
   const duplicateErrorCode = 409;
