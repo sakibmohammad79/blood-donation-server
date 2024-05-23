@@ -16,7 +16,7 @@ const Guard = (...userRoles: string[]) => {
   ) => {
     try {
       const token = req.headers.authorization;
-
+      console.log(token);
       if (!token) {
         throw new ApiError(httpStatus.UNAUTHORIZED, "You are not authorized!");
       }

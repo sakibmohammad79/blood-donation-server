@@ -44,6 +44,59 @@ const logInUser = async (payload: { email: string; password: string }) => {
     needPasswordChange: user.needPasswordChange,
   };
 };
+
+const passwordChange = async (
+  user: {
+    userId: string;
+    email: string;
+    role: string;
+    iat: number;
+    exp: number;
+  },
+  payload: { oldPassword: string; newPassword: string },
+  token: string
+) => {
+  const userData = await prisma.user.findUniqueOrThrow({
+    where: {
+      email: user.email,
+      status: UserStatus.ACTIVE,
+    },
+  });
+
+  //compare password
+  const isPasswordCorrect: boolean = await bcrypt.compare(
+    payload.oldPassword,
+    userData.password
+  );
+  if (!isPasswordCorrect) {
+    throw new Error("Old password not correct!");
+  }
+
+  const verifyToken = jwtHelpers.verifyToken(
+    token,
+    config.jwt.access_token_secret as Secret
+  );
+
+  if (!verifyToken) {
+    throw new ApiError(httpStatus.FORBIDDEN, "You are not authorized!");
+  }
+
+  //hashed password
+  const hashedPassword = await bcrypt.hash(payload.newPassword, 12);
+
+  await prisma.user.update({
+    where: {
+      email: userData.email,
+      status: UserStatus.ACTIVE,
+    },
+    data: {
+      password: hashedPassword,
+      needPasswordChange: false,
+    },
+  });
+  return;
+};
 export const AuthService = {
   logInUser,
+  passwordChange,
 };
