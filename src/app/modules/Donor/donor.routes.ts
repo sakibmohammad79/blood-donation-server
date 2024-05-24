@@ -7,9 +7,10 @@ const router = Router();
 
 router.get(
   "/",
-  Guard(UserRole.ADMIN, UserRole.DONOR),
+  // Guard(UserRole.ADMIN, UserRole.DONOR),
   DonorController.getAllDonor
 );
+
 router.get(
   "/:id",
   Guard(UserRole.ADMIN, UserRole.DONOR),

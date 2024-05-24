@@ -6,8 +6,9 @@ import { apiNotFoundHandler } from "./app/middleware/apiNotFoundHandler";
 const app: Application = express();
 
 //parser
-app.use(cors());
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 app.use(express.json());
+// app.use(express.urlencoded({ extended: true }));
 
 //application route
 app.use("/api/v1", router);
