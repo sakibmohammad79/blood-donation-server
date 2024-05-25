@@ -94,7 +94,10 @@ const passwordChange = async (
       needPasswordChange: false,
     },
   });
-  return;
+  return {
+    success: true,
+    message: "password change success!",
+  };
 };
 export const AuthService = {
   logInUser,

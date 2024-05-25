@@ -2,6 +2,7 @@ import { User, UserStatus } from "@prisma/client";
 import prisma from "../../../shared/prisma";
 
 const bloodRequestIntoDB = async (req: any) => {
+  console.log(req.body);
   const user = req.user;
   //check user exists
   const requesterUserData = await prisma.user.findUniqueOrThrow({
@@ -20,9 +21,6 @@ const bloodRequestIntoDB = async (req: any) => {
 
   const bloodRequestData = req.body;
   bloodRequestData.requesterId = donorData.id;
-  bloodRequestData.requesterEmail = donorData.email;
-  bloodRequestData.location = donorData.location;
-  bloodRequestData.contactNumber = donorData.contactNumber;
 
   const result = await prisma.request.create({
     data: bloodRequestData,

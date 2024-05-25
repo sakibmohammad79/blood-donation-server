@@ -50,6 +50,9 @@ const getAllDonorFromDB = async (
             [paginateOptions.sortBy as string]: paginateOptions.sortOrder,
           }
         : { createdAt: "asc" },
+    include: {
+      user: true,
+    },
   });
 
   const total = await prisma.donor.count({

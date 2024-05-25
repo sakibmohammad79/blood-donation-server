@@ -50,6 +50,9 @@ const getAllAdminFromDB = async (
             [paginateOptions.sortBy as string]: paginateOptions.sortOrder,
           }
         : { createdAt: "asc" },
+    include: {
+      user: true,
+    },
   });
 
   const total = await prisma.admin.count({
