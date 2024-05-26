@@ -1,8 +1,7 @@
-import { User, UserStatus } from "@prisma/client";
+import { RequestStatus, User, UserStatus } from "@prisma/client";
 import prisma from "../../../shared/prisma";
 
 const bloodRequestIntoDB = async (req: any) => {
-  console.log(req.body);
   const user = req.user;
   //check user exists
   const requesterUserData = await prisma.user.findUniqueOrThrow({
@@ -30,7 +29,6 @@ const bloodRequestIntoDB = async (req: any) => {
 
 const getMyBloodRequestIntoDB = async (req: any) => {
   const user = req.user;
-  console.log({ user });
   const result = await prisma.request.findMany({
     where: {
       requesterEmail: user.email,
@@ -41,26 +39,93 @@ const getMyBloodRequestIntoDB = async (req: any) => {
 
 const getOfferedMeBloodRequest = async (req: any) => {
   const { user } = req;
+  console.log(user);
   const userData = await prisma.user.findFirstOrThrow({
     where: {
       id: user.userId,
     },
   });
+
   const donorData = await prisma.donor.findFirstOrThrow({
     where: {
       email: userData.email,
     },
   });
+
+  console.log(donorData);
+
   const offeredMeRequestData = await prisma.request.findMany({
     where: {
       receiverId: donorData.id,
     },
   });
+  console.log(offeredMeRequestData);
   return offeredMeRequestData;
+};
+
+const bloodRequestStatusChange = async (req: any) => {
+  const { user } = req;
+
+  const { id } = req.params;
+  const { status } = req.query;
+
+  const userData = await prisma.user.findFirstOrThrow({
+    where: {
+      id: user.userId,
+    },
+  });
+
+  const donorData = await prisma.donor.findFirstOrThrow({
+    where: {
+      email: userData.email,
+    },
+  });
+
+  const offeredMeRequest = await prisma.request.findFirstOrThrow({
+    where: {
+      receiverId: donorData.id,
+      requesterId: id,
+      // status: RequestStatus.PENDING,
+    },
+  });
+
+  let offeredMeRequestUpdate;
+  if (status === RequestStatus.APPROVED) {
+    offeredMeRequestUpdate = await prisma.request.update({
+      where: {
+        id: offeredMeRequest.id,
+      },
+      data: {
+        status: RequestStatus.APPROVED,
+      },
+    });
+  }
+  if (status === RequestStatus.REJECTED) {
+    offeredMeRequestUpdate = await prisma.request.updateMany({
+      where: {
+        id: offeredMeRequest.id,
+      },
+      data: {
+        status: RequestStatus.REJECTED,
+      },
+    });
+  }
+  if (status === RequestStatus.PENDING) {
+    offeredMeRequestUpdate = await prisma.request.updateMany({
+      where: {
+        id: offeredMeRequest.id,
+      },
+      data: {
+        status: RequestStatus.PENDING,
+      },
+    });
+  }
+  return offeredMeRequestUpdate;
 };
 
 export const RequestService = {
   bloodRequestIntoDB,
   getMyBloodRequestIntoDB,
   getOfferedMeBloodRequest,
+  bloodRequestStatusChange,
 };

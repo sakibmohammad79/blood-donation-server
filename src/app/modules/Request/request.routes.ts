@@ -15,4 +15,10 @@ router.get(
 
 router.post("/", Guard(UserRole.DONOR), RequestControoler.bloodRequest);
 
+router.patch(
+  "/status/:id",
+  Guard(UserRole.DONOR),
+  RequestControoler.bloodRequestStatusChange
+);
+
 export const RequestRoutes = router;

@@ -64,10 +64,24 @@ const updateAdmin = catchAsync(async (req, res, next) => {
   });
 });
 
+const statusChange = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const query = req.query;
+
+  const result = await AdminService.adminStatusChagne(id, query);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Admin status change successfully!",
+    data: result,
+  });
+});
+
 export const AdminController = {
   getAllAdmin,
   getSingleAdmin,
   adminDelete,
   adminSoftDelete,
   updateAdmin,
+  statusChange,
 };

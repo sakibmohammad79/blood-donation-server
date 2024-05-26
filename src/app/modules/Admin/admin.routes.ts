@@ -17,6 +17,11 @@ router.patch(
   Guard(UserRole.ADMIN),
   AdminController.adminSoftDelete
 );
+router.patch(
+  "/status/:id",
+  Guard(UserRole.ADMIN),
+  AdminController.statusChange
+);
 
 router.patch("/:id", Guard(UserRole.ADMIN), AdminController.updateAdmin);
 

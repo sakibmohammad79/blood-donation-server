@@ -64,10 +64,24 @@ const updateDonor = catchAsync(async (req, res, next) => {
   });
 });
 
+const statusChange = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const query = req.query;
+
+  const result = await DonorService.donorStatusChagne(id, query);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Donor status change successfully!",
+    data: result,
+  });
+});
+
 export const DonorController = {
   getAllDonor,
   getSingleDonor,
   donorDelete,
   donorSoftDelete,
   updateDonor,
+  statusChange,
 };

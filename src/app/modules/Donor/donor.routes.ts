@@ -26,6 +26,12 @@ router.patch(
 );
 
 router.patch(
+  "/status/:id",
+  Guard(UserRole.ADMIN),
+  DonorController.statusChange
+);
+
+router.patch(
   "/:id",
   Guard(UserRole.ADMIN, UserRole.DONOR),
   DonorController.updateDonor

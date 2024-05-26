@@ -150,10 +150,55 @@ const updateAdminIntoDB = async (
   return result;
 };
 
+const adminStatusChagne = async (id: string, query: any) => {
+  const { status } = query;
+
+  const adminData = await prisma.admin.findFirstOrThrow({
+    where: {
+      id,
+      isDeleted: false,
+    },
+  });
+
+  const userData = await prisma.user.findUniqueOrThrow({
+    where: {
+      email: adminData.email,
+    },
+  });
+  let result;
+  if (status === UserStatus.ACTIVE) {
+    result = await prisma.user.update({
+      where: {
+        id: userData.id,
+      },
+      data: { status: UserStatus.ACTIVE },
+    });
+  }
+  if (status === UserStatus.BLOCKED) {
+    result = await prisma.user.update({
+      where: {
+        id: userData.id,
+      },
+      data: { status: UserStatus.BLOCKED },
+    });
+  }
+  if (status === UserStatus.DELETED) {
+    result = await prisma.user.update({
+      where: {
+        id: userData.id,
+      },
+      data: { status: UserStatus.DELETED },
+    });
+  }
+
+  return result;
+};
+
 export const AdminService = {
   getAllAdminFromDB,
   getSingleAdminFromDB,
   adminDeleteIntoDB,
   adminSoftDeleteIntoDB,
   updateAdminIntoDB,
+  adminStatusChagne,
 };

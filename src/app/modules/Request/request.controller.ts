@@ -33,8 +33,19 @@ const offeredMeBloodRequest = catchAsync(async (req, res, next) => {
   });
 });
 
+const bloodRequestStatusChange = catchAsync(async (req, res, next) => {
+  const result = await RequestService.bloodRequestStatusChange(req);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Offered me blood request status update!",
+    data: result,
+  });
+});
+
 export const RequestControoler = {
   bloodRequest,
   myBloodRequest,
   offeredMeBloodRequest,
+  bloodRequestStatusChange,
 };
