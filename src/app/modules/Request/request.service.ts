@@ -85,7 +85,6 @@ const bloodRequestStatusChange = async (req: any) => {
     where: {
       receiverId: donorData.id,
       requesterId: id,
-      // status: RequestStatus.PENDING,
     },
   });
 
@@ -123,9 +122,25 @@ const bloodRequestStatusChange = async (req: any) => {
   return offeredMeRequestUpdate;
 };
 
+const getSingleRequestReceiver = async (id: string) => {
+  const result = await prisma.request.findFirstOrThrow({
+    where: {
+      receiverId: id,
+    },
+  });
+
+  const donorInfo = await prisma.donor.findFirstOrThrow({
+    where: {
+      id: result.receiverId,
+    },
+  });
+  return donorInfo;
+};
+
 export const RequestService = {
   bloodRequestIntoDB,
   getMyBloodRequestIntoDB,
   getOfferedMeBloodRequest,
   bloodRequestStatusChange,
+  getSingleRequestReceiver,
 };

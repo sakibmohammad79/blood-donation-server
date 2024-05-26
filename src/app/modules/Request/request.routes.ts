@@ -13,6 +13,12 @@ router.get(
   RequestControoler.offeredMeBloodRequest
 );
 
+router.get(
+  "/:id",
+  Guard(UserRole.DONOR, UserRole.ADMIN),
+  RequestControoler.getSingleRequestReceiver
+);
+
 router.post("/", Guard(UserRole.DONOR), RequestControoler.bloodRequest);
 
 router.patch(

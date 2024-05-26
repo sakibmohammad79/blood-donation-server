@@ -43,9 +43,21 @@ const bloodRequestStatusChange = catchAsync(async (req, res, next) => {
   });
 });
 
+const getSingleRequestReceiver = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const result = await RequestService.getSingleRequestReceiver(id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Single blood request reciever fetch!",
+    data: result,
+  });
+});
+
 export const RequestControoler = {
   bloodRequest,
   myBloodRequest,
   offeredMeBloodRequest,
   bloodRequestStatusChange,
+  getSingleRequestReceiver,
 };
