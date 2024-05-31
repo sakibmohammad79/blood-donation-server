@@ -4,6 +4,7 @@ import { DonorRoutes } from "../modules/Donor/donor.routes";
 import { RequestRoutes } from "../modules/Request/request.routes";
 import { AuthRoutes } from "../modules/Auth/auth.routes";
 import { AdminRoutes } from "../modules/Admin/admin.routes";
+import { ReviewRoutes } from "../modules/Review/review.routes";
 
 const router = Router();
 
@@ -27,6 +28,10 @@ const moduleRoutes = [
   {
     path: "/auth",
     route: AuthRoutes,
+  },
+  {
+    path: "/review",
+    route: ReviewRoutes,
   },
 ];
 

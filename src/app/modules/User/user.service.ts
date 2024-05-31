@@ -3,7 +3,6 @@ import bcrypt from "bcrypt";
 import prisma from "../../../shared/prisma";
 import { IAuthUser } from "../../interfaces/common";
 import ApiError from "../../error/ApiError";
-import httpStatus from "http-status";
 
 const createDonorIntoDB = async (payload: any) => {
   const userInfo = await prisma.user.findUnique({
@@ -93,34 +92,27 @@ const getMyProfileIntoDB = async (user: IAuthUser) => {
     where: {
       email: user?.email,
     },
-    select: {
-      id: true,
-      email: true,
-      role: true,
-      status: true,
-      needPasswordChange: true,
-    },
   });
 
-  let profileInfo;
+  let adminInfo;
   if (userInfo.role === UserRole.DONOR) {
-    profileInfo = await prisma.donor.findUnique({
+    adminInfo = await prisma.donor.findUnique({
       where: {
-        email: userInfo.email,
+        email: userInfo?.email,
       },
     });
   }
   if (userInfo.role === UserRole.ADMIN) {
-    profileInfo = await prisma.admin.findUnique({
+    adminInfo = await prisma.admin.findUnique({
       where: {
-        email: userInfo.email,
+        email: userInfo?.email,
       },
     });
   }
 
   return {
     ...userInfo,
-    ...profileInfo,
+    ...adminInfo,
   };
 };
 

@@ -74,6 +74,9 @@ const getSingleAdminFromDB = async (id: string) => {
       id,
       isDeleted: false,
     },
+    include: {
+      user: true,
+    },
   });
   return result;
 };
@@ -101,14 +104,14 @@ const adminDeleteIntoDB = async (id: string) => {
 };
 
 const adminSoftDeleteIntoDB = async (id: string) => {
-  await prisma.admin.findFirstOrThrow({
-    where: {
-      id,
-      isDeleted: false,
-    },
-  });
-
   const result = await prisma.$transaction(async (transactionClient) => {
+    await transactionClient.admin.findFirstOrThrow({
+      where: {
+        id,
+        isDeleted: false,
+      },
+    });
+
     const adminDeleteData = await transactionClient.admin.update({
       where: {
         id,

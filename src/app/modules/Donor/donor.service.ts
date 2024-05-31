@@ -9,31 +9,91 @@ const getAllDonorFromDB = async (
   paginateOptions: IPaginationOptions
 ) => {
   const { searchTerm, ...filterData } = params;
+  console.log(filterData);
   const { page, limit, skip } =
     paginationHelper.calculatePagination(paginateOptions);
 
-  const andCondition: Prisma.DonorWhereInput[] = [];
-  if (params.searchTerm) {
+  // const andCondition: Prisma.DonorWhereInput[] = [];
+  // if (params.searchTerm) {
+  //   andCondition.push({
+  //     OR: donorSearchableFields.map((field) => ({
+  //       [field]: {
+  //         contains: params.searchTerm,
+  //         mode: "insensitive",
+  //       },
+  //     })),
+  //   });
+  // }
+  // List of fields that should be treated as booleans
+
+  const booleanFields = ["availability"];
+
+  const convertedFilterData = Object.keys(filterData).reduce((acc, key) => {
+    let value = filterData[key];
+
+    // Convert string to boolean for boolean fields
+    if (booleanFields.includes(key)) {
+      value = value === "true" || value === true;
+    }
+
+    acc[key] = value;
+    return acc;
+  }, {} as Record<string, any>);
+
+  const andCondition: any[] = [];
+
+  if (Object.keys(convertedFilterData).length > 0) {
     andCondition.push({
-      OR: donorSearchableFields.map((field) => ({
-        [field]: {
-          contains: params.searchTerm,
-          mode: "insensitive",
-        },
-      })),
+      AND: Object.keys(convertedFilterData).map((key) => {
+        const value = convertedFilterData[key];
+        const filterCondition: any = {
+          equals: value,
+        };
+
+        // Only apply mode: "insensitive" for string fields, except for specific fields like bloodType
+        if (typeof value === "string" && key !== "bloodType") {
+          filterCondition.mode = "insensitive";
+        }
+
+        return {
+          [key]: filterCondition,
+        };
+      }),
     });
   }
 
-  if (Object.keys(filterData).length > 0) {
-    andCondition.push({
-      AND: Object.keys(filterData).map((key) => ({
-        [key]: {
-          equals: (filterData as any)[key],
-          mode: "insensitive",
-        },
-      })),
-    });
-  }
+  // if (Object.keys(filterData).length > 0) {
+  //   andCondition.push({
+  //     AND: Object.keys(filterData).map((key) => ({
+  //       [key]: {
+  //         equals: (filterData as any)[key],
+  //         mode: "insensitive",
+  //       },
+  //     })),
+  //   });
+  // }
+
+  // if (Object.keys(filterData).length > 0) {
+  //   andCondition.push({
+  //     AND: Object.keys(filterData).map((key) => {
+  //       const filterCondition: any = {
+  //         equals: (filterData as any)[key],
+  //       };
+
+  //       // Only apply mode: "insensitive" for string fields, except for specific fields like bloodType
+  //       if (
+  //         typeof (filterData as any)[key] === "string" &&
+  //         key !== "bloodType"
+  //       ) {
+  //         filterCondition.mode = "insensitive";
+  //       }
+
+  //       return {
+  //         [key]: filterCondition,
+  //       };
+  //     }),
+  //   });
+  // }
 
   andCondition.push({
     isDeleted: false,
@@ -79,12 +139,18 @@ const getSingleDonorFromDB = async (id: string) => {
 };
 
 const donorDeleteIntoDB = async (id: string) => {
-  await prisma.donor.findUniqueOrThrow({
+  const donorData = await prisma.donor.findUniqueOrThrow({
     where: {
       id,
     },
   });
   const result = await prisma.$transaction(async (transactionClient) => {
+    await transactionClient.request.deleteMany({
+      where: {
+        requesterId: donorData.id,
+        receiverId: donorData.id,
+      },
+    });
     const donorDeleteData = await transactionClient.donor.delete({
       where: {
         id,

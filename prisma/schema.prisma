@@ -47,6 +47,7 @@ model Donor {
 
   requestsMade  Request[] @relation("Requester")
   requestsReceived Request[] @relation("Receiver")
+  review Review[]
 }
 
 model Admin {
@@ -55,6 +56,9 @@ model Admin {
   name String
   contactNumber String?
   photo     String? 
+  gender Gender?
+  location  String?
+  bloodType BloodType?
   isDeleted Boolean @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -80,6 +84,27 @@ model Request {
   bloodNeedDetails String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+
+model Review {
+  id        String      @id @default(uuid())
+  name     String
+  donorId String
+  address   String
+  photo    String?
+  details String
+  rating Float
+  status ReviewStatus @default(PENDING)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  donor Donor @relation(fields: [donorId], references: [id])
+}
+
+enum ReviewStatus {
+  APPROVED
+  PENDING
 }
 
 enum RequestStatus {
