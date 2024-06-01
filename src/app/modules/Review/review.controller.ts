@@ -6,7 +6,7 @@ import { ReviewService } from "./review.service";
 
 const createReivew = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const result = await ReviewService.createReviewInotDB(req.body);
+    const result = await ReviewService.createReviewInotDB(req);
     sendResponse(res, {
       statusCode: httpStatus.CREATED,
       success: true,
