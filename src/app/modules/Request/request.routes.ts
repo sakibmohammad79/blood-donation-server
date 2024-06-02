@@ -23,7 +23,7 @@ router.post("/", Guard(UserRole.DONOR), RequestControoler.bloodRequest);
 
 router.patch(
   "/status/:id",
-  Guard(UserRole.DONOR),
+  Guard(UserRole.DONOR, UserRole.ADMIN),
   RequestControoler.bloodRequestStatusChange
 );
 

@@ -13,5 +13,5 @@ router.get("/my", (0, authGuard_1.default)(client_1.UserRole.DONOR), request_con
 router.get("/me", (0, authGuard_1.default)(client_1.UserRole.DONOR), request_controller_1.RequestControoler.offeredMeBloodRequest);
 router.get("/:id", (0, authGuard_1.default)(client_1.UserRole.DONOR, client_1.UserRole.ADMIN), request_controller_1.RequestControoler.getSingleRequestReceiver);
 router.post("/", (0, authGuard_1.default)(client_1.UserRole.DONOR), request_controller_1.RequestControoler.bloodRequest);
-router.patch("/status/:id", (0, authGuard_1.default)(client_1.UserRole.DONOR), request_controller_1.RequestControoler.bloodRequestStatusChange);
+router.patch("/status/:id", (0, authGuard_1.default)(client_1.UserRole.DONOR, client_1.UserRole.ADMIN), request_controller_1.RequestControoler.bloodRequestStatusChange);
 exports.RequestRoutes = router;

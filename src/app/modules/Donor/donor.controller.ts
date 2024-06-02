@@ -18,6 +18,22 @@ const getAllDonor = catchAsync(async (req, res, next) => {
     data: result.data,
   });
 });
+const getAllDonorWithOutMe = catchAsync(async (req, res, next) => {
+  const query = pick(req.query, donorFilterableFields);
+  const options = pick(req.query, paginateOptions);
+  const result = await DonorService.getAllDonorFromDBWithOutMe(
+    req,
+    query,
+    options
+  );
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Donor data fetched with out me successfully!",
+    meta: result.meta,
+    data: result.data,
+  });
+});
 
 const getSingleDonor = catchAsync(async (req, res, next) => {
   const { id } = req.params;
@@ -84,4 +100,5 @@ export const DonorController = {
   donorSoftDelete,
   updateDonor,
   statusChange,
+  getAllDonorWithOutMe,
 };

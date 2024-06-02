@@ -9,22 +9,9 @@ const getAllDonorFromDB = async (
   paginateOptions: IPaginationOptions
 ) => {
   const { searchTerm, ...filterData } = params;
-  console.log(filterData);
+
   const { page, limit, skip } =
     paginationHelper.calculatePagination(paginateOptions);
-
-  // const andCondition: Prisma.DonorWhereInput[] = [];
-  // if (params.searchTerm) {
-  //   andCondition.push({
-  //     OR: donorSearchableFields.map((field) => ({
-  //       [field]: {
-  //         contains: params.searchTerm,
-  //         mode: "insensitive",
-  //       },
-  //     })),
-  //   });
-  // }
-  // List of fields that should be treated as booleans
 
   const booleanFields = ["availability"];
 
@@ -62,38 +49,103 @@ const getAllDonorFromDB = async (
     });
   }
 
-  // if (Object.keys(filterData).length > 0) {
-  //   andCondition.push({
-  //     AND: Object.keys(filterData).map((key) => ({
-  //       [key]: {
-  //         equals: (filterData as any)[key],
-  //         mode: "insensitive",
-  //       },
-  //     })),
-  //   });
-  // }
+  andCondition.push({
+    isDeleted: false,
+  });
 
-  // if (Object.keys(filterData).length > 0) {
-  //   andCondition.push({
-  //     AND: Object.keys(filterData).map((key) => {
-  //       const filterCondition: any = {
-  //         equals: (filterData as any)[key],
-  //       };
+  const whereCondition: Prisma.DonorWhereInput = { AND: andCondition };
+  const result = await prisma.donor.findMany({
+    where: whereCondition,
+    skip,
+    take: limit,
+    orderBy:
+      paginateOptions.sortBy && paginateOptions.sortOrder
+        ? {
+            [paginateOptions.sortBy as string]: paginateOptions.sortOrder,
+          }
+        : { createdAt: "asc" },
+    include: {
+      user: true,
+    },
+  });
 
-  //       // Only apply mode: "insensitive" for string fields, except for specific fields like bloodType
-  //       if (
-  //         typeof (filterData as any)[key] === "string" &&
-  //         key !== "bloodType"
-  //       ) {
-  //         filterCondition.mode = "insensitive";
-  //       }
+  const total = await prisma.donor.count({
+    where: whereCondition,
+  });
+  return {
+    meta: {
+      page,
+      limit,
+      total,
+    },
+    data: result,
+  };
+};
 
-  //       return {
-  //         [key]: filterCondition,
-  //       };
-  //     }),
-  //   });
-  // }
+const getAllDonorFromDBWithOutMe = async (
+  req: any,
+  params: any,
+  paginateOptions: IPaginationOptions
+) => {
+  const { searchTerm, ...filterData } = params;
+  const { page, limit, skip } =
+    paginationHelper.calculatePagination(paginateOptions);
+
+  const booleanFields = ["availability"];
+
+  const convertedFilterData = Object.keys(filterData).reduce((acc, key) => {
+    let value = filterData[key];
+
+    // Convert string to boolean for boolean fields
+    if (booleanFields.includes(key)) {
+      value = value === "true" || value === true;
+    }
+
+    acc[key] = value;
+    return acc;
+  }, {} as Record<string, any>);
+
+  const andCondition: any[] = [];
+
+  if (Object.keys(convertedFilterData).length > 0) {
+    andCondition.push({
+      AND: Object.keys(convertedFilterData).map((key) => {
+        const value = convertedFilterData[key];
+        const filterCondition: any = {
+          equals: value,
+        };
+
+        // Only apply mode: "insensitive" for string fields, except for specific fields like bloodType
+        if (typeof value === "string" && key !== "bloodType") {
+          filterCondition.mode = "insensitive";
+        }
+
+        return {
+          [key]: filterCondition,
+        };
+      }),
+    });
+  }
+
+  const { user } = req;
+
+  const userData = await prisma.user.findFirstOrThrow({
+    where: {
+      id: user.userId,
+    },
+  });
+
+  const donorData = await prisma.donor.findFirstOrThrow({
+    where: {
+      email: userData.email,
+    },
+  });
+
+  andCondition.push({
+    email: {
+      not: donorData.email,
+    },
+  });
 
   andCondition.push({
     isDeleted: false,
@@ -149,6 +201,11 @@ const donorDeleteIntoDB = async (id: string) => {
       where: {
         requesterId: donorData.id,
         receiverId: donorData.id,
+      },
+    });
+    await transactionClient.review.deleteMany({
+      where: {
+        donorId: donorData.id,
       },
     });
     const donorDeleteData = await transactionClient.donor.delete({
@@ -267,4 +324,5 @@ export const DonorService = {
   donorSoftDeleteIntoDB,
   updateDonorIntoDB,
   donorStatusChagne,
+  getAllDonorFromDBWithOutMe,
 };

@@ -1,5 +1,7 @@
 import { RequestStatus, User, UserStatus } from "@prisma/client";
 import prisma from "../../../shared/prisma";
+import ApiError from "../../error/ApiError";
+import httpStatus from "http-status";
 
 const bloodRequestIntoDB = async (req: any) => {
   const user = req.user;
@@ -21,6 +23,21 @@ const bloodRequestIntoDB = async (req: any) => {
   const bloodRequestData = req.body;
   bloodRequestData.requesterId = donorData.id;
 
+  const existingRequest = await prisma.request.findFirst({
+    where: {
+      requesterId: donorData.id,
+      receiverId: bloodRequestData.receiverId,
+    },
+  });
+
+  const duplicateErrorCode = 409;
+  if (existingRequest) {
+    throw new ApiError(
+      duplicateErrorCode,
+      "You have already sent a request to this user."
+    );
+  }
+
   const result = await prisma.request.create({
     data: bloodRequestData,
   });
@@ -39,7 +56,7 @@ const getMyBloodRequestIntoDB = async (req: any) => {
 
 const getOfferedMeBloodRequest = async (req: any) => {
   const { user } = req;
-  console.log(user);
+
   const userData = await prisma.user.findFirstOrThrow({
     where: {
       id: user.userId,
@@ -52,14 +69,12 @@ const getOfferedMeBloodRequest = async (req: any) => {
     },
   });
 
-  console.log(donorData);
-
   const offeredMeRequestData = await prisma.request.findMany({
     where: {
       receiverId: donorData.id,
     },
   });
-  console.log(offeredMeRequestData);
+
   return offeredMeRequestData;
 };
 

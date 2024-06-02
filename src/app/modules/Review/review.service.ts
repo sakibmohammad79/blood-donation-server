@@ -22,7 +22,7 @@ const createReviewInotDB = async (req: any) => {
     donorData.photo ||
     "https://i.postimg.cc/43gT3HP6/pngtree-user-icon-isolated-on-abstract-background-png-image-5192004.jpg";
   reviewData.address = donorData.location;
-  console.log(reviewData);
+
   const result = await prisma.review.create({
     data: reviewData,
   });

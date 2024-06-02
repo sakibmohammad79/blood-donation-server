@@ -10,7 +10,10 @@ const globalErrorHandler_1 = require("./app/middleware/globalErrorHandler");
 const apiNotFoundHandler_1 = require("./app/middleware/apiNotFoundHandler");
 const app = (0, express_1.default)();
 //parser
-app.use((0, cors_1.default)({ origin: "http://localhost:3000", credentials: true }));
+app.use((0, cors_1.default)({
+    origin: "http://localhost:3000",
+    credentials: true,
+}));
 app.use(express_1.default.json());
 // app.use(express.urlencoded({ extended: true }));
 //application route

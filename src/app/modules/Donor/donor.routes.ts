@@ -5,10 +5,12 @@ import { UserRole } from "@prisma/client";
 
 const router = Router();
 
+router.get("/all-donor", DonorController.getAllDonor);
+
 router.get(
   "/",
-  // Guard(UserRole.ADMIN, UserRole.DONOR),
-  DonorController.getAllDonor
+  Guard(UserRole.ADMIN, UserRole.DONOR),
+  DonorController.getAllDonorWithOutMe
 );
 
 router.get(
