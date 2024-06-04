@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.RequestService = void 0;
 const client_1 = require("@prisma/client");
 const prisma_1 = __importDefault(require("../../../shared/prisma"));
+const ApiError_1 = __importDefault(require("../../error/ApiError"));
 const bloodRequestIntoDB = (req) => __awaiter(void 0, void 0, void 0, function* () {
     const user = req.user;
     //check user exists
@@ -33,6 +34,16 @@ const bloodRequestIntoDB = (req) => __awaiter(void 0, void 0, void 0, function* 
     });
     const bloodRequestData = req.body;
     bloodRequestData.requesterId = donorData.id;
+    const existingRequest = yield prisma_1.default.request.findFirst({
+        where: {
+            requesterId: donorData.id,
+            receiverId: bloodRequestData.receiverId,
+        },
+    });
+    const duplicateErrorCode = 409;
+    if (existingRequest) {
+        throw new ApiError_1.default(duplicateErrorCode, "You have already sent a request to this user.");
+    }
     const result = yield prisma_1.default.request.create({
         data: bloodRequestData,
     });
@@ -49,7 +60,6 @@ const getMyBloodRequestIntoDB = (req) => __awaiter(void 0, void 0, void 0, funct
 });
 const getOfferedMeBloodRequest = (req) => __awaiter(void 0, void 0, void 0, function* () {
     const { user } = req;
-    console.log(user);
     const userData = yield prisma_1.default.user.findFirstOrThrow({
         where: {
             id: user.userId,
@@ -60,13 +70,11 @@ const getOfferedMeBloodRequest = (req) => __awaiter(void 0, void 0, void 0, func
             email: userData.email,
         },
     });
-    console.log(donorData);
     const offeredMeRequestData = yield prisma_1.default.request.findMany({
         where: {
             receiverId: donorData.id,
         },
     });
-    console.log(offeredMeRequestData);
     return offeredMeRequestData;
 });
 const bloodRequestStatusChange = (req) => __awaiter(void 0, void 0, void 0, function* () {

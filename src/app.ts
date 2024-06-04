@@ -8,12 +8,12 @@ const app: Application = express();
 //parser
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://blood-donation-client-one.vercel.app",
     credentials: true,
   })
 );
 app.use(express.json());
-// app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
 
 //application route
 app.use("/api/v1", router);

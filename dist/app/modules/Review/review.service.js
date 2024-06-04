@@ -33,7 +33,6 @@ const createReviewInotDB = (req) => __awaiter(void 0, void 0, void 0, function* 
         donorData.photo ||
             "https://i.postimg.cc/43gT3HP6/pngtree-user-icon-isolated-on-abstract-background-png-image-5192004.jpg";
     reviewData.address = donorData.location;
-    console.log(reviewData);
     const result = yield prisma_1.default.review.create({
         data: reviewData,
     });

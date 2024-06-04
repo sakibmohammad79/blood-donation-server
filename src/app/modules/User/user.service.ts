@@ -1,4 +1,4 @@
-import { Prisma, User, UserRole } from "@prisma/client";
+import { UserRole } from "@prisma/client";
 import bcrypt from "bcrypt";
 import prisma from "../../../shared/prisma";
 import { IAuthUser } from "../../interfaces/common";
@@ -25,6 +25,19 @@ const createDonorIntoDB = async (payload: any) => {
   }
 
   const hashedPassword = await bcrypt.hash(payload.password, 12);
+
+  // async function hashPassword(password: any, costFactor = 12) {
+  //   try {
+  //     const hashedPassword = await bcrypt.hash(password, costFactor);
+  //     return hashedPassword;
+  //   } catch (error) {
+  //     console.error("Error hashing password:", error);
+  //     // Handle error appropriately (e.g., log, return an error response)
+  //   }
+  // }
+
+  // const hashedPassword = hashPassword(payload.password);
+
   const userData: any = {
     email: payload.donor.email,
     password: hashedPassword,

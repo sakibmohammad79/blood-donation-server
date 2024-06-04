@@ -32,6 +32,18 @@ const getAllDonor = (0, catchAsync_1.default)((req, res, next) => __awaiter(void
         data: result.data,
     });
 }));
+const getAllDonorWithOutMe = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const query = (0, pick_1.default)(req.query, donor_constant_1.donorFilterableFields);
+    const options = (0, pick_1.default)(req.query, globalConstant_1.paginateOptions);
+    const result = yield donor_service_1.DonorService.getAllDonorFromDBWithOutMe(req, query, options);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "Donor data fetched with out me successfully!",
+        meta: result.meta,
+        data: result.data,
+    });
+}));
 const getSingleDonor = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     const result = yield donor_service_1.DonorService.getSingleDonorFromDB(id);
@@ -90,4 +102,5 @@ exports.DonorController = {
     donorSoftDelete,
     updateDonor,
     statusChange,
+    getAllDonorWithOutMe,
 };

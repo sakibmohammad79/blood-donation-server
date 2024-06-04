@@ -36,6 +36,16 @@ const createDonorIntoDB = (payload) => __awaiter(void 0, void 0, void 0, functio
         throw new ApiError_1.default(duplicateErrorCode, "User already exists!");
     }
     const hashedPassword = yield bcrypt_1.default.hash(payload.password, 12);
+    // async function hashPassword(password: any, costFactor = 12) {
+    //   try {
+    //     const hashedPassword = await bcrypt.hash(password, costFactor);
+    //     return hashedPassword;
+    //   } catch (error) {
+    //     console.error("Error hashing password:", error);
+    //     // Handle error appropriately (e.g., log, return an error response)
+    //   }
+    // }
+    // const hashedPassword = hashPassword(payload.password);
     const userData = {
         email: payload.donor.email,
         password: hashedPassword,
