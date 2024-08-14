@@ -26,3 +26,6 @@ app.get("/", (req, res) => {
 app.use(globalErrorHandler_1.globalErrorHandler);
 app.use(apiNotFoundHandler_1.apiNotFoundHandler);
 exports.default = app;
+//bloodCaresa79kib..
+//DATABASE_URL=postgresql://postgres:YTjaaDPaULOHdGDqtnFIObTlGnByzofy@monorail.proxy.rlwy.net:26093/railway
+//DATABASE_URL=postgres://postgres.snpiuhfryrlvzmyratse:bloodCaresa79kib..@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres

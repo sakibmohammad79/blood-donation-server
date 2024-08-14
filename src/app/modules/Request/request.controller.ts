@@ -4,6 +4,24 @@ import sendResponse from "../../../shared/sendResponse";
 import { RequestService } from "./request.service";
 import { User } from "@prisma/client";
 
+const allRequest = catchAsync(async (req, res, next) => {
+  const result = await RequestService.getAllRequest();
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "All blood request fetch successfully!",
+    data: result,
+  });
+});
+const allApprovedRequest = catchAsync(async (req, res, next) => {
+  const result = await RequestService.getAllApprovedRequest();
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "All approved request fetch successfully!",
+    data: result,
+  });
+});
 const bloodRequest = catchAsync(async (req, res, next) => {
   const result = await RequestService.bloodRequestIntoDB(req);
   sendResponse(res, {
@@ -55,6 +73,8 @@ const getSingleRequestReceiver = catchAsync(async (req, res, next) => {
 });
 
 export const RequestControoler = {
+  allRequest,
+  allApprovedRequest,
   bloodRequest,
   myBloodRequest,
   offeredMeBloodRequest,

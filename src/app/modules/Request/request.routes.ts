@@ -5,6 +5,10 @@ import { UserRole } from "@prisma/client";
 
 const router = Router();
 
+router.get("/", RequestControoler.allRequest);
+
+router.get("/approved", RequestControoler.allApprovedRequest);
+
 router.get("/my", Guard(UserRole.DONOR), RequestControoler.myBloodRequest);
 
 router.get(

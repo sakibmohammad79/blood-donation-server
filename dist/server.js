@@ -11,3 +11,4 @@ const main = () => {
     });
 };
 main();
+//DATABASE_URL=postgresql://postgres:YTjaaDPaULOHdGDqtnFIObTlGnByzofy@monorail.proxy.rlwy.net:26093/railway

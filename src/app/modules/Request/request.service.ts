@@ -1,7 +1,40 @@
 import { RequestStatus, User, UserStatus } from "@prisma/client";
 import prisma from "../../../shared/prisma";
 import ApiError from "../../error/ApiError";
-import httpStatus from "http-status";
+import { paginateOptions } from "../../constant/globalConstant";
+import { paginationHelper } from "../../../helper/paginationHelper";
+
+const getAllRequest = async () => {
+  const { page, limit, skip } =
+    paginationHelper.calculatePagination(paginateOptions);
+  const result = await prisma.request.findMany({
+    skip,
+    take: limit,
+  });
+
+  const total = await prisma.request.count();
+  return {
+    meta: {
+      page,
+      limit,
+      total,
+    },
+    data: result,
+  };
+};
+const getAllApprovedRequest = async () => {
+  const { page, limit, skip } =
+    paginationHelper.calculatePagination(paginateOptions);
+  const result = await prisma.request.findMany({
+    where: {
+      status: "APPROVED",
+    },
+    skip,
+    take: limit,
+  });
+
+  return result;
+};
 
 const bloodRequestIntoDB = async (req: any) => {
   const user = req.user;
@@ -153,6 +186,8 @@ const getSingleRequestReceiver = async (id: string) => {
 };
 
 export const RequestService = {
+  getAllRequest,
+  getAllApprovedRequest,
   bloodRequestIntoDB,
   getMyBloodRequestIntoDB,
   getOfferedMeBloodRequest,
