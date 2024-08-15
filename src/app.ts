@@ -8,7 +8,7 @@ const app: Application = express();
 //parser
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://blood-donation-client-one.vercel.app",
     credentials: true,
   })
 );
@@ -34,3 +34,4 @@ export default app;
 //DATABASE_URL=postgresql://postgres:YTjaaDPaULOHdGDqtnFIObTlGnByzofy@monorail.proxy.rlwy.net:26093/railway
 //DATABASE_URL=postgres://postgres.snpiuhfryrlvzmyratse:bloodCaresa79kib..@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres
 //https://blood-donation-client-one.vercel.app
+//http://localhost:3000

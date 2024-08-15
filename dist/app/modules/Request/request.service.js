@@ -16,6 +16,35 @@ exports.RequestService = void 0;
 const client_1 = require("@prisma/client");
 const prisma_1 = __importDefault(require("../../../shared/prisma"));
 const ApiError_1 = __importDefault(require("../../error/ApiError"));
+const globalConstant_1 = require("../../constant/globalConstant");
+const paginationHelper_1 = require("../../../helper/paginationHelper");
+const getAllRequest = () => __awaiter(void 0, void 0, void 0, function* () {
+    const { page, limit, skip } = paginationHelper_1.paginationHelper.calculatePagination(globalConstant_1.paginateOptions);
+    const result = yield prisma_1.default.request.findMany({
+        skip,
+        take: limit,
+    });
+    const total = yield prisma_1.default.request.count();
+    return {
+        meta: {
+            page,
+            limit,
+            total,
+        },
+        data: result,
+    };
+});
+const getAllApprovedRequest = () => __awaiter(void 0, void 0, void 0, function* () {
+    const { page, limit, skip } = paginationHelper_1.paginationHelper.calculatePagination(globalConstant_1.paginateOptions);
+    const result = yield prisma_1.default.request.findMany({
+        where: {
+            status: "APPROVED",
+        },
+        skip,
+        take: limit,
+    });
+    return result;
+});
 const bloodRequestIntoDB = (req) => __awaiter(void 0, void 0, void 0, function* () {
     const user = req.user;
     //check user exists
@@ -144,6 +173,8 @@ const getSingleRequestReceiver = (id) => __awaiter(void 0, void 0, void 0, funct
     return donorInfo;
 });
 exports.RequestService = {
+    getAllRequest,
+    getAllApprovedRequest,
     bloodRequestIntoDB,
     getMyBloodRequestIntoDB,
     getOfferedMeBloodRequest,

@@ -11,7 +11,7 @@ const client_1 = require("@prisma/client");
 const router = (0, express_1.Router)();
 router.get("/all-donor", donor_controller_1.DonorController.getAllDonor);
 router.get("/", (0, authGuard_1.default)(client_1.UserRole.DONOR), donor_controller_1.DonorController.getAllDonorWithOutMe);
-router.get("/:id", (0, authGuard_1.default)(client_1.UserRole.ADMIN, client_1.UserRole.DONOR), donor_controller_1.DonorController.getSingleDonor);
+router.get("/:id", donor_controller_1.DonorController.getSingleDonor);
 router.delete("/:id", (0, authGuard_1.default)(client_1.UserRole.ADMIN), donor_controller_1.DonorController.donorDelete);
 router.patch("/soft-delete/:id", (0, authGuard_1.default)(client_1.UserRole.ADMIN), donor_controller_1.DonorController.donorSoftDelete);
 router.patch("/status/:id", (0, authGuard_1.default)(client_1.UserRole.ADMIN), donor_controller_1.DonorController.statusChange);

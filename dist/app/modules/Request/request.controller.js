@@ -17,6 +17,24 @@ const http_status_1 = __importDefault(require("http-status"));
 const catchAsync_1 = __importDefault(require("../../../shared/catchAsync"));
 const sendResponse_1 = __importDefault(require("../../../shared/sendResponse"));
 const request_service_1 = require("./request.service");
+const allRequest = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield request_service_1.RequestService.getAllRequest();
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "All blood request fetch successfully!",
+        data: result,
+    });
+}));
+const allApprovedRequest = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield request_service_1.RequestService.getAllApprovedRequest();
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "All approved request fetch successfully!",
+        data: result,
+    });
+}));
 const bloodRequest = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield request_service_1.RequestService.bloodRequestIntoDB(req);
     (0, sendResponse_1.default)(res, {
@@ -64,6 +82,8 @@ const getSingleRequestReceiver = (0, catchAsync_1.default)((req, res, next) => _
     });
 }));
 exports.RequestControoler = {
+    allRequest,
+    allApprovedRequest,
     bloodRequest,
     myBloodRequest,
     offeredMeBloodRequest,

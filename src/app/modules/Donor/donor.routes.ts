@@ -11,7 +11,7 @@ router.get("/", Guard(UserRole.DONOR), DonorController.getAllDonorWithOutMe);
 
 router.get(
   "/:id",
-  Guard(UserRole.ADMIN, UserRole.DONOR),
+
   DonorController.getSingleDonor
 );
 
