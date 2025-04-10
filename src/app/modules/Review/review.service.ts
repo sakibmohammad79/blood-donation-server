@@ -44,9 +44,17 @@ const approvedReviewIntoDB = async (id: string) => {
     data: {status: ReviewStatus.APPROVED}
   })
 }
+const deleteReviewFromDB = async (id: string) => {
+  const deletedReveiw = await prisma.review.delete({
+    where: {
+      id,
+    },
+  })
+}
 
 export const ReviewService = {
   createReviewInotDB,
   getAllReviewFromDB,
-  approvedReviewIntoDB
+  approvedReviewIntoDB,
+  deleteReviewFromDB
 };

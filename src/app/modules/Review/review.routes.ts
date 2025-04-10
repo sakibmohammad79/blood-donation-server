@@ -11,4 +11,6 @@ router.post("/", Guard(UserRole.DONOR), ReviewController.createReivew);
 
 router.patch("/approved-review", Guard(UserRole.ADMIN), ReviewController.approvedReview );
 
+router.delete("/delete-review", Guard(UserRole.ADMIN), ReviewController.deleteReview );
+
 export const ReviewRoutes = router;
