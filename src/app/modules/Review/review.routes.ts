@@ -9,4 +9,6 @@ router.get("/", ReviewController.getAllReview);
 
 router.post("/", Guard(UserRole.DONOR), ReviewController.createReivew);
 
+router.patch("/approved-review", Guard(UserRole.ADMIN), ReviewController.approvedReview );
+
 export const ReviewRoutes = router;

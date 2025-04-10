@@ -1,3 +1,4 @@
+import { ReviewStatus } from "@prisma/client";
 import prisma from "../../../shared/prisma";
 
 const createReviewInotDB = async (req: any) => {
@@ -34,7 +35,18 @@ const getAllReviewFromDB = async () => {
   return result;
 };
 
+const approvedReviewIntoDB = async (id: string) => {
+  const approvedReviewData = await prisma.review.update({
+    where: {
+      id,
+      
+    },
+    data: {status: ReviewStatus.APPROVED}
+  })
+}
+
 export const ReviewService = {
   createReviewInotDB,
   getAllReviewFromDB,
+  approvedReviewIntoDB
 };

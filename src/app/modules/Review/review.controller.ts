@@ -26,8 +26,21 @@ const getAllReview = catchAsync(
     });
   }
 );
+const approvedReview = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const {id}= req.params;
+    const result = await ReviewService.approvedReviewIntoDB(id);
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Review approved successfully!",
+      data: result,
+    });
+  }
+);
 
 export const ReviewController = {
   createReivew,
   getAllReview,
+  approvedReview
 };
