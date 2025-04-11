@@ -6,14 +6,10 @@ import { VolunteerController } from "./volunteers.controller";
 
 const router = Router();
 
-// router.get(
-//   "/me",
-//   Guard(UserRole.ADMIN),
-//   UserController.getMyProfile
-// );
-
-// router.post("/create-donor", UserController.createDonor);
-
+router.get(
+  "/", VolunteerController.getAllVoluteer
+);
 router.post("/create-volunteer", Guard(UserRole.ADMIN), VolunteerController.createVolunteer);
+router.patch("/active-volunteer", Guard(UserRole.ADMIN), VolunteerController.activeVolunteer);
 
 export const VolunteerRoutes = router;
