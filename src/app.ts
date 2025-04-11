@@ -6,18 +6,13 @@ import { apiNotFoundHandler } from "./app/middleware/apiNotFoundHandler";
 const app: Application = express();
 
 //parser
+
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://blood-donation-client-one.vercel.app",
     credentials: true,
   })
 );
-// app.use(
-//   cors({
-//     origin: "https://blood-donation-client-one.vercel.app",
-//     credentials: true,
-//   })
-// );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
