@@ -9,8 +9,8 @@ router.get("/", ReviewController.getAllReview);
 
 router.post("/", Guard(UserRole.DONOR), ReviewController.createReivew);
 
-router.patch("/approved-review", Guard(UserRole.ADMIN), ReviewController.approvedReview );
+router.patch("/approved-review/:id", Guard(UserRole.ADMIN), ReviewController.approvedReview );
 
-router.delete("/delete-review", Guard(UserRole.ADMIN), ReviewController.deleteReview );
+router.delete("/delete-review/:id", Guard(UserRole.ADMIN), ReviewController.deleteReview );
 
 export const ReviewRoutes = router;

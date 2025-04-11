@@ -41,6 +41,7 @@ const approvedReview = catchAsync(
 const deleteReview = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const {id}= req.params;
+    console.log(id);
     const result = await ReviewService.deleteReviewFromDB(id);
     sendResponse(res, {
       statusCode: httpStatus.OK,

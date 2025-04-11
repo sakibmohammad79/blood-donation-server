@@ -1,5 +1,6 @@
 import { ReviewStatus } from "@prisma/client";
 import prisma from "../../../shared/prisma";
+import app from "../../../app";
 
 const createReviewInotDB = async (req: any) => {
   const { user } = req;
@@ -43,6 +44,7 @@ const approvedReviewIntoDB = async (id: string) => {
     },
     data: {status: ReviewStatus.APPROVED}
   })
+  return approvedReviewData
 }
 const deleteReviewFromDB = async (id: string) => {
   const deletedReveiw = await prisma.review.delete({
@@ -50,6 +52,7 @@ const deleteReviewFromDB = async (id: string) => {
       id,
     },
   })
+  return deletedReveiw
 }
 
 export const ReviewService = {
