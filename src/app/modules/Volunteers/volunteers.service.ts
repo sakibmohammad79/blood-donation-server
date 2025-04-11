@@ -58,7 +58,7 @@ const createVolunteerIntoDB = async (payload: any) => {
     }
   
     andCondition.push({
-      isActive: true,
+      
     });
   
     const whereCondition: Prisma.VolunteerWhereInput = { AND: andCondition };

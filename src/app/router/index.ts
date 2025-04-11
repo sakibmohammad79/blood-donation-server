@@ -6,6 +6,7 @@ import { AuthRoutes } from "../modules/Auth/auth.routes";
 import { AdminRoutes } from "../modules/Admin/admin.routes";
 import { ReviewRoutes } from "../modules/Review/review.routes";
 import { VolunteerRoutes } from "../modules/Volunteers/volunteers.routes";
+import { GalleryRoutes } from "../modules/Gallery/gallery.routes";
 
 const router = Router();
 
@@ -37,6 +38,10 @@ const moduleRoutes = [
   {
     path: "/volunteer",
     route: VolunteerRoutes,
+  },
+  {
+    path: "/gallery",
+    route: GalleryRoutes,
   },
 ];
 

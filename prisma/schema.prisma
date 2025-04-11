@@ -118,6 +118,13 @@ model Review {
   donor Donor @relation(fields: [donorId], references: [id])
 }
 
+model Gallery {
+  id        String   @id @default(cuid())
+  title     String
+  imageUrl  String
+  createdAt DateTime @default(now())
+}
+
 enum ReviewStatus {
   APPROVED
   PENDING
