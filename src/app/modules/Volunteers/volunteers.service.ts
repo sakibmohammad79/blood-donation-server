@@ -96,7 +96,7 @@ const createVolunteerIntoDB = async (payload: any) => {
       },
     });
   
-    if (volunteerInfo) {
+    if (!volunteerInfo) {
       throw new ApiError(httpStatus.NOT_FOUND, "Inactive volunteer not found!");
     }
 
@@ -110,21 +110,24 @@ const createVolunteerIntoDB = async (payload: any) => {
     })
     return activeVolunteer
   }
+
+
   const inactiveVolunteer = async(id: string) => {
     const volunteerInfo = await prisma.volunteer.findUnique({
       where: {
         id,
-        isActive: true
+       isActive: true
       },
     });
   
-    if (volunteerInfo) {
+    if (!volunteerInfo) {
       throw new ApiError(httpStatus.NOT_FOUND, "Active volunteer not found!");
     }
 
     const inactiveVolunteer = await prisma.volunteer.update({
       where: {
-        id
+        id,
+      
       },
       data: {
         isActive: false
@@ -132,11 +135,30 @@ const createVolunteerIntoDB = async (payload: any) => {
     })
     return inactiveVolunteer
   }
+  const deleteVolunteer = async(id: string) => {
+    const volunteerInfo = await prisma.volunteer.findUnique({
+      where: {
+        id,
+      },
+    });
+  
+    if (!volunteerInfo) {
+      throw new ApiError(httpStatus.NOT_FOUND, "Volunteer not found!");
+    }
+
+    const deleteVolunteer = await prisma.volunteer.delete({
+      where: {
+        id,
+      }
+    })
+    return deleteVolunteer
+  }
   
 
   export const VolunteerService ={
     createVolunteerIntoDB,
     getAllVolunteerFromDB,
     activeVolunteer,
-    inactiveVolunteer
+    inactiveVolunteer,
+    deleteVolunteer
   }

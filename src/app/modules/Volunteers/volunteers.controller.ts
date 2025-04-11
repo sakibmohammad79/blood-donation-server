@@ -33,6 +33,7 @@ const getAllVoluteer = catchAsync(async (req, res, next) => {
 });
 const activeVolunteer = catchAsync(async (req, res, next) => {
  const {id} = req.params
+ console.log(id);
   const result = await VolunteerService.activeVolunteer(id);
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -41,10 +42,31 @@ const activeVolunteer = catchAsync(async (req, res, next) => {
     data: result,
   });
 });
-
+const inactiveVolunteer = catchAsync(async (req, res, next) => {
+ const {id} = req.params
+  const result = await VolunteerService.inactiveVolunteer(id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Volunteer inactivated successfully!",
+    data: result,
+  });
+});
+const deleteVolunteer = catchAsync(async (req, res, next) => {
+ const {id} = req.params
+  const result = await VolunteerService.deleteVolunteer(id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Volunteer deleted successfully!",
+    data: result,
+  });
+});
 
 export const VolunteerController = {
   createVolunteer,
   getAllVoluteer,
-  activeVolunteer
+  activeVolunteer,
+  inactiveVolunteer,
+  deleteVolunteer
 };
