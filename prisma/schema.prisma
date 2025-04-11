@@ -121,7 +121,7 @@ model Review {
 model Gallery {
   id        String   @id @default(cuid())
   title     String
-  imageUrl  String
+  imageUrl  String?
   createdAt DateTime @default(now())
 }
 
