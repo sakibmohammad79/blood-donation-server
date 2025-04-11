@@ -5,6 +5,7 @@ import { RequestRoutes } from "../modules/Request/request.routes";
 import { AuthRoutes } from "../modules/Auth/auth.routes";
 import { AdminRoutes } from "../modules/Admin/admin.routes";
 import { ReviewRoutes } from "../modules/Review/review.routes";
+import { VolunteerRoutes } from "../modules/Volunteers/volunteers.routes";
 
 const router = Router();
 
@@ -32,6 +33,10 @@ const moduleRoutes = [
   {
     path: "/review",
     route: ReviewRoutes,
+  },
+  {
+    path: "/volunteer",
+    route: VolunteerRoutes,
   },
 ];
 
