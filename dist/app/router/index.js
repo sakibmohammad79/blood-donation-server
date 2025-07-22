@@ -7,6 +7,8 @@ const request_routes_1 = require("../modules/Request/request.routes");
 const auth_routes_1 = require("../modules/Auth/auth.routes");
 const admin_routes_1 = require("../modules/Admin/admin.routes");
 const review_routes_1 = require("../modules/Review/review.routes");
+const volunteers_routes_1 = require("../modules/Volunteers/volunteers.routes");
+const gallery_routes_1 = require("../modules/Gallery/gallery.routes");
 const router = (0, express_1.Router)();
 const moduleRoutes = [
     {
@@ -32,6 +34,14 @@ const moduleRoutes = [
     {
         path: "/review",
         route: review_routes_1.ReviewRoutes,
+    },
+    {
+        path: "/volunteer",
+        route: volunteers_routes_1.VolunteerRoutes,
+    },
+    {
+        path: "/gallery",
+        route: gallery_routes_1.GalleryRoutes,
     },
 ];
 moduleRoutes.forEach((route) => router.use(route.path, route.route));

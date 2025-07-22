@@ -35,7 +35,30 @@ const getAllReview = (0, catchAsync_1.default)((req, res, next) => __awaiter(voi
         data: result,
     });
 }));
+const approvedReview = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const result = yield review_service_1.ReviewService.approvedReviewIntoDB(id);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "Review approved successfully!",
+        data: result,
+    });
+}));
+const deleteReview = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    console.log(id);
+    const result = yield review_service_1.ReviewService.deleteReviewFromDB(id);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "Review delete successfully!",
+        data: result,
+    });
+}));
 exports.ReviewController = {
     createReivew,
     getAllReview,
+    approvedReview,
+    deleteReview
 };

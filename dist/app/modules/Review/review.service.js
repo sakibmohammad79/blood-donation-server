@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ReviewService = void 0;
+const client_1 = require("@prisma/client");
 const prisma_1 = __importDefault(require("../../../shared/prisma"));
 const createReviewInotDB = (req) => __awaiter(void 0, void 0, void 0, function* () {
     const { user } = req;
@@ -42,7 +43,26 @@ const getAllReviewFromDB = () => __awaiter(void 0, void 0, void 0, function* () 
     const result = yield prisma_1.default.review.findMany({});
     return result;
 });
+const approvedReviewIntoDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const approvedReviewData = yield prisma_1.default.review.update({
+        where: {
+            id,
+        },
+        data: { status: client_1.ReviewStatus.APPROVED }
+    });
+    return approvedReviewData;
+});
+const deleteReviewFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const deletedReveiw = yield prisma_1.default.review.delete({
+        where: {
+            id,
+        },
+    });
+    return deletedReveiw;
+});
 exports.ReviewService = {
     createReviewInotDB,
     getAllReviewFromDB,
+    approvedReviewIntoDB,
+    deleteReviewFromDB
 };

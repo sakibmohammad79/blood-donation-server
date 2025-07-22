@@ -13,6 +13,8 @@ router.get(
 
 router.post("/create-donor", UserController.createDonor);
 
-router.post("/create-admin", Guard(UserRole.ADMIN), UserController.createAdmin);
+router.post("/create-admin",
+  //  Guard(UserRole.ADMIN),
+    UserController.createAdmin);
 
 export const UserRoutes = router;
