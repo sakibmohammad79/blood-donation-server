@@ -11,7 +11,5 @@ const client_1 = require("@prisma/client");
 const router = (0, express_1.Router)();
 router.get("/me", (0, authGuard_1.default)(client_1.UserRole.ADMIN, client_1.UserRole.DONOR), user_controller_1.UserController.getMyProfile);
 router.post("/create-donor", user_controller_1.UserController.createDonor);
-router.post("/create-admin", 
-//  Guard(UserRole.ADMIN),
-user_controller_1.UserController.createAdmin);
+router.post("/create-admin", (0, authGuard_1.default)(client_1.UserRole.ADMIN), user_controller_1.UserController.createAdmin);
 exports.UserRoutes = router;
